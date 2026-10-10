@@ -51,37 +51,40 @@
     const house = (params.get("house") || "").toLowerCase();
 
     const audio = document.getElementById("sound");
-    const button = document.getElementById("play");
+    const button = document.getElementById("playButton");
     const message = document.getElementById("message");
 
-    if (houses[house]) {
-      message.textContent = houses[house] + "!";
-      document.title = houses[house] + " — Sorting Hat";
+    // Never reveal the selected house on the page.
+    message.textContent = "";
+    button.textContent = "🎩 Play Sorting Hat";
 
-      // MP3 files are in the SAME folder as index.html
+    if (houses[house]) {
       audio.src = house + ".mp3";
     } else {
-      message.textContent = "Tap a house tag to begin.";
+      message.textContent = "Please scan a house tag to begin.";
       button.hidden = true;
     }
 
     async function playSound() {
+      if (!houses[house]) return;
+
       try {
         await audio.play();
-        button.textContent = "Playing...";
-        message.textContent = houses[house] + "!";
+        button.textContent = "🎩 Play Sorting Hat";
       } catch (error) {
         message.textContent =
-          "Your house is ready! Tap below to hear the Sorting Hat.";
-        button.textContent = "Play " + houses[house] + "!";
+          "Tap the button to hear the Sorting Hat.";
+        button.textContent = "🎩 Play Sorting Hat";
       }
     }
 
     button.addEventListener("click", playSound);
 
+    // Attempt autoplay; the button remains available if blocked.
     if (houses[house]) {
       playSound();
     }
   </script>
 </body>
 </html>
+```
