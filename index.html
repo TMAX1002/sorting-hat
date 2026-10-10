@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Sorting Hat</title>
+  <style>
+    body {
+      background: #17120f;
+      color: #f6e5bd;
+      font-family: Georgia, serif;
+      text-align: center;
+      padding: 40px 16px;
+    }
+    h1 { font-size: 2rem; }
+    button {
+      padding: 16px 26px;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>The Sorting Hat</h1>
+  <p id="message">The hat is deciding your house...</p>
+  <button id="play">Hear your house!</button>
+  <audio id="sound" preload="auto"></audio>
+
+  <script>
+    const houses = {
+      gryffindor: "Gryffindor",
+      hufflepuff: "Hufflepuff",
+      ravenclaw: "Ravenclaw",
+      slytherin: "Slytherin"
+    };
+
+    const params = new URLSearchParams(location.search);
+    const house = (params.get("house") || "").toLowerCase();
+    const audio = document.getElementById("sound");
+    const button = document.getElementById("play");
+    const message = document.getElementById("message");
+
+    if (houses[house]) {
+      message.textContent = houses[house] + "!";
+      audio.src = "audio/" + house + ".mp3";
+      document.title = houses[house] + " — Sorting Hat";
+    } else {
+      message.textContent = "Tap a house tag to begin.";
+      button.hidden = true;
+    }
+
+    async function playSound() {
+      try {
+        await audio.play();
+        button.textContent = "Playing...";
+      } catch (error) {
+        message.textContent =
+          "The Sorting Hat is ready. Tap below to hear your house!";
+        button.textContent = "Play " + (houses[house] || "house") + "!";
+      }
+    }
+
+    button.addEventListener("click", playSound);
+
+    if (houses[house]) {
+      playSound();
+    }
+  </script>
+</body>
+</html>
