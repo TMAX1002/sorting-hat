@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>The Sorting Hat</title>
 
   <style>
@@ -28,60 +28,72 @@
       color: #17120f;
       border: none;
     }
+
+    #message {
+      margin: 20px 0;
+    }
   </style>
 </head>
 
 <body>
   <h1>The Sorting Hat</h1>
-  <p id="message">The hat is deciding your house...</p>
+
+  <p id="message"></p>
 
   <button id="playButton">🎩 Play Sorting Hat</button>
 
   <audio id="sound" preload="auto"></audio>
 
   <script>
-    const houses = {
-      gryffindor: "Gryffindor",
-      hufflepuff: "Hufflepuff",
-      ravenclaw: "Ravenclaw",
-      slytherin: "Slytherin"
+    // Secret codes mapped to the correct audio files.
+    // These codes do not reveal the house name in the URL.
+    const tags = {
+      "7x9k2": "gryffindor",
+      "m4p8q": "hufflepuff",
+      "2v6n3": "ravenclaw",
+      "b5r1w": "slytherin"
     };
 
     const params = new URLSearchParams(location.search);
-    const house = (params.get("house") || "").toLowerCase();
+    const tag = params.get("tag") || "";
+    const house = tags[tag] || "";
 
     const audio = document.getElementById("sound");
     const button = document.getElementById("playButton");
     const message = document.getElementById("message");
 
-    // Never reveal the selected house on the page.
+    // Never display the selected house.
+    document.title = "The Sorting Hat";
     message.textContent = "";
     button.textContent = "🎩 Play Sorting Hat";
 
-    if (houses[house]) {
+    if (house) {
+      // MP3 files are in the same folder as index.html.
       audio.src = house + ".mp3";
     } else {
-      message.textContent = "Please scan a house tag to begin.";
+      message.textContent =
+        "Please scan your Sorting Hat tag to begin.";
       button.hidden = true;
     }
 
     async function playSound() {
-      if (!houses[house]) return;
+      if (!house) return;
 
       try {
         await audio.play();
-        button.textContent = "🎩 Play Sorting Hat";
       } catch (error) {
         message.textContent =
-          "Tap the button to hear the Sorting Hat.";
-        button.textContent = "🎩 Play Sorting Hat";
+          "Tap the button below to hear the Sorting Hat.";
       }
+
+      // Keep the button text unchanged.
+      button.textContent = "🎩 Play Sorting Hat";
     }
 
     button.addEventListener("click", playSound);
 
-    // Attempt autoplay; the button remains available if blocked.
-    if (houses[house]) {
+    // Try autoplay; some browsers require a tap instead.
+    if (house) {
       playSound();
     }
   </script>
