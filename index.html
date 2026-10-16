@@ -71,6 +71,11 @@
       font-family: Arial, sans-serif;
       font-size: 1rem;
       font-weight: bold;
+      transition: transform 0.2s;
+    }
+
+    .socialButton:hover {
+      transform: scale(1.05);
     }
 
     .facebook {
@@ -79,6 +84,27 @@
 
     .instagram {
       background: #b73579;
+    }
+
+    .logoContainer {
+      margin: 28px auto 0;
+      max-width: 220px;
+    }
+
+    .businessLogo {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 2px solid #c9a85c;
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(201, 168, 92, 0.25);
+    }
+
+    .businessName {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-top: 15px;
+      letter-spacing: 1px;
     }
   </style>
 </head>
@@ -95,7 +121,9 @@
 
   <audio id="sound" preload="auto"></audio>
 
+  <!-- Hidden until the Sorting Hat finishes speaking -->
   <section id="socialSection" hidden>
+
     <p class="socialTitle">✨ Enjoyed the magic?</p>
 
     <p class="socialText">
@@ -103,6 +131,7 @@
     </p>
 
     <div class="socialButtons">
+
       <a
         class="socialButton facebook"
         href="https://www.facebook.com/share/1Ed5ngH8MF/?mibextid=wwXIfr"
@@ -120,11 +149,29 @@
       >
         Instagram
       </a>
+
     </div>
+
+    <!-- 3 Dog Print Logo -->
+    <div class="logoContainer">
+
+      <img
+        class="businessLogo"
+        src="3dogprint-logo.jpg"
+        alt="3 Dog Print Logo"
+      >
+
+      <p class="businessName">
+        🐾 3 Dog Print 🐾
+      </p>
+
+    </div>
+
   </section>
 
   <script>
-    // Existing NFC codes — unchanged.
+    // Original secret NFC codes.
+    // No need to reprogram your tags.
     const tags = {
       "7x9k2": "gryffindor",
       "m4p8q": "hufflepuff",
@@ -141,6 +188,7 @@
     const message = document.getElementById("message");
     const socialSection = document.getElementById("socialSection");
 
+    // Never reveal the selected house on screen.
     document.title = "The Sorting Hat";
     message.textContent = "";
 
@@ -155,7 +203,7 @@
     async function playSound() {
       if (!house) return;
 
-      // Hide follow buttons until audio finishes.
+      // Hide social buttons while the sound plays.
       socialSection.hidden = true;
 
       try {
@@ -168,14 +216,14 @@
       }
     }
 
-    // Show social links only when audio completes.
+    // Reveal social buttons and logo after audio ends.
     audio.addEventListener("ended", () => {
       socialSection.hidden = false;
     });
 
     button.addEventListener("click", playSound);
 
-    // Attempt autoplay where the browser allows it.
+    // Try autoplay where supported.
     if (house) {
       playSound();
     }
