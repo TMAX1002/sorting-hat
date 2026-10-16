@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +20,7 @@
       font-size: 2rem;
     }
 
-    button {
+    #playButton {
       padding: 16px 26px;
       font-size: 1.2rem;
       border-radius: 10px;
@@ -32,21 +33,98 @@
     #message {
       margin: 20px 0;
     }
+
+    #socialSection {
+      margin: 35px auto 0;
+      max-width: 350px;
+      border-top: 1px solid #675747;
+      padding-top: 25px;
+    }
+
+    #socialSection[hidden] {
+      display: none;
+    }
+
+    .socialTitle {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .socialText {
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .socialButtons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .socialButton {
+      color: white;
+      text-decoration: none;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-family: Arial, sans-serif;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .facebook {
+      background: #1877f2;
+    }
+
+    .instagram {
+      background: #b73579;
+    }
   </style>
 </head>
 
 <body>
+
   <h1>The Sorting Hat</h1>
 
   <p id="message"></p>
 
-  <button id="playButton">🎩 Play Sorting Hat</button>
+  <button id="playButton">
+    🎩 Play Sorting Hat
+  </button>
 
   <audio id="sound" preload="auto"></audio>
 
+  <section id="socialSection" hidden>
+    <p class="socialTitle">✨ Enjoyed the magic?</p>
+
+    <p class="socialText">
+      Follow 3 Dog Print for more magical creations!
+    </p>
+
+    <div class="socialButtons">
+      <a
+        class="socialButton facebook"
+        href="https://www.facebook.com/share/1Ed5ngH8MF/?mibextid=wwXIfr"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Facebook
+      </a>
+
+      <a
+        class="socialButton instagram"
+        href="https://www.instagram.com/3dog_print/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Instagram
+      </a>
+    </div>
+  </section>
+
   <script>
-    // Secret codes mapped to the correct audio files.
-    // These codes do not reveal the house name in the URL.
+    // Existing NFC codes — unchanged.
     const tags = {
       "7x9k2": "gryffindor",
       "m4p8q": "hufflepuff",
@@ -61,14 +139,12 @@
     const audio = document.getElementById("sound");
     const button = document.getElementById("playButton");
     const message = document.getElementById("message");
+    const socialSection = document.getElementById("socialSection");
 
-    // Never display the selected house.
     document.title = "The Sorting Hat";
     message.textContent = "";
-    button.textContent = "🎩 Play Sorting Hat";
 
     if (house) {
-      // MP3 files are in the same folder as index.html.
       audio.src = house + ".mp3";
     } else {
       message.textContent =
@@ -79,23 +155,31 @@
     async function playSound() {
       if (!house) return;
 
+      // Hide follow buttons until audio finishes.
+      socialSection.hidden = true;
+
       try {
+        audio.currentTime = 0;
         await audio.play();
+        message.textContent = "";
       } catch (error) {
         message.textContent =
           "Tap the button below to hear the Sorting Hat.";
       }
-
-      // Keep the button text unchanged.
-      button.textContent = "🎩 Play Sorting Hat";
     }
+
+    // Show social links only when audio completes.
+    audio.addEventListener("ended", () => {
+      socialSection.hidden = false;
+    });
 
     button.addEventListener("click", playSound);
 
-    // Try autoplay; some browsers require a tap instead.
+    // Attempt autoplay where the browser allows it.
     if (house) {
       playSound();
     }
   </script>
+
 </body>
 </html>
